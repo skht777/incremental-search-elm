@@ -29,8 +29,8 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg ({ words, word } as model) =
     -- implements your code
     case msg of
-        _ ->
-            ( model, Cmd.none )
+        SearchText text ->
+            ( { model | word = text }, Cmd.none )
 
 
 
@@ -39,13 +39,13 @@ update msg ({ words, word } as model) =
 
 view : Model -> Html Msg
 view { words, word } =
+    let
+        wordList = List.filter (\s -> String.contains word s) words
+            |> List.map (\word -> li [] [text word])
+    in
     div []
-        [ input [ placeholder "Search...", value "app" ] []
-        , ul []
-            [ li [] [ text "apple" ]
-            , li [] [ text "approval" ]
-            , li [] [ text "happy" ]
-            ]
+        [ input [ placeholder "Search...", value word, onInput SearchText ] []
+        , ul [] wordList
         ]
 
 
